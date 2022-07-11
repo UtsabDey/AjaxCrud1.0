@@ -128,8 +128,10 @@
                         data += "<td>" + value.title + "</td>"
                         data += "<td>" + value.institute + "</td>"
                         data += "<td>"
-                        data += "<button class='btn btn-sm btn-primary me-2' onclick='editData("+value.id+")'>Edit</button>"
-                        data += "<button class='btn btn-sm btn-danger' onclick='deleteData("+value.id+")'>Delete</button>"
+                        data += "<button class='btn btn-sm btn-primary me-2' onclick='editData(" + value
+                            .id + ")'>Edit</button>"
+                        data += "<button class='btn btn-sm btn-danger' onclick='deleteData(" + value
+                            .id + ")'>Delete</button>"
                         data += "</td>"
                         data += "</tr>"
                     });
@@ -241,40 +243,47 @@
         }
 
         // ==============  Delete Data  ==================
-        function deleteData($id) {
+        function deleteData(id) {
+            alert(id);
             swal.fire({
-                title: 'Are you sure?',
-                text: "You won't be able to revert this!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, delete it!'
-            }).then((willDetele) => {
-                if (willDetele) {
-                    $.ajax({
-                        type: "GET",
-                        url: "delete-Teacher/" + id,
-                        dataType: "json",
-                        success: function(response) {
-                            console.log(response);
-                            Swal.fire(
-                                'Deleted!',
-                                'Your file has been deleted.',
-                                'warning',
-                            )
-                            clearData();
-                            addData();
-                        },
-                        error: function(error) {
-                            console.log(error);
-                        }
-                    });
-                }
-                else{
-                    swal('Cancelled');
-                }
-            })
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete it!'
+                })
+                .then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            type: "GET",
+                            dataType: "json",
+                            url: "delete-Teacher/" + id,
+                            success: function(response) {
+                                // console.log(response);
+                                if (response.status == 200) {
+                                    Swal.fire(
+                                        'Deleted!',
+                                        'Your file has been deleted.',
+                                        'warning',
+                                    )
+                                }
+                                clearData();
+                                allData();
+                            },
+                            error: function(error) {
+                                console.log(error);
+                            }
+                        });
+                    } else if (result.dismiss == Swal.DismissReason.cancel) {
+                        swalWithBootstrapButtons.fire(
+                            'Cancelled',
+                            'Your Data is safe :)',
+                            'error'
+                        )
+                    }
+                })
         }
     </script>
 </body>

@@ -99,6 +99,8 @@ class TeacherController extends Controller
     {
         $data = Teacher::findOrFail($id);
         $data->delete();
-        return response()->json($data);
+        return response()->json([
+            'status' => 200,
+        ]);
     }
 }
